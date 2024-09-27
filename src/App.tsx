@@ -59,50 +59,52 @@ function App() {
     };
 
 
-  return (
-      <div>
-          <TextField
-              label="禮品標題"
-              value={translations['zh-HK'].title}
-              onChange={(e) => handleMainChange('title', e.target.value)}
-              fullWidth
-              margin="normal"
-              InputProps={{
-                  endAdornment: (
-                      <InputAdornment position="end">
-                          <Button variant="outlined" onClick={() => handleEditTitleDialog('title')}>
-                              其他語言
-                          </Button>
-                      </InputAdornment>
-                  ),
-              }}
-          />
-          <TextField
-              label="禮品副標題"
-              value={translations['zh-HK'].subTitle}
-              onChange={(e) => handleMainChange('subTitle', e.target.value)}
-              fullWidth
-              margin="normal"
-              InputProps={{
-                  endAdornment: (
-                      <InputAdornment position="end">
-                          <Button variant="outlined" onClick={() => handleEditTitleDialog('subTitle')}>
-                              其他語言
-                          </Button>
-                      </InputAdornment>
-                  ),
-              }}
-          />
-          <Button onClick={() => console.log(translations)}>Log translations</Button>
-          <TitleTranslationDialog
-              open={titleTranslationDialogOpen}
-              onClose={(updatedValues, dialogTarget) => handleDialogClose(updatedValues, dialogTarget)}
-              dialogTarget={dialogTarget}
-              defaultValue={translations['zh-HK'][dialogTarget]}
-              existingTranslations={translations}
-          />
-      </div>
-  )
+    return (
+        <div>
+            <form>
+                <TextField
+                    label="禮品標題"
+                    value={translations['zh-HK'].title}
+                    onChange={(e) => handleMainChange('title', e.target.value)}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <Button variant="outlined" onClick={() => handleEditTitleDialog('title')}>
+                                    其他語言
+                                </Button>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <TextField
+                    label="禮品副標題"
+                    value={translations['zh-HK'].subTitle}
+                    onChange={(e) => handleMainChange('subTitle', e.target.value)}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <Button variant="outlined" onClick={() => handleEditTitleDialog('subTitle')}>
+                                    其他語言
+                                </Button>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <Button onClick={() => console.log(translations)}>Log translations</Button>
+            </form>
+            <TitleTranslationDialog
+                open={titleTranslationDialogOpen}
+                onClose={(updatedValues, dialogTarget) => handleDialogClose(updatedValues, dialogTarget)}
+                dialogTarget={dialogTarget}
+                defaultValue={translations['zh-HK'][dialogTarget]}
+                existingTranslations={translations}
+            />
+        </div>
+    )
 }
 
 export default App
