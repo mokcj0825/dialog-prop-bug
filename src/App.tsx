@@ -1,34 +1,107 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import {Button, InputAdornment, TextField} from "@mui/material";
+import {TranslationObject} from "./TranslationObject.ts";
+import {TitleTranslationDialog} from "./TitleTranslationDialog.tsx";
+
+const AVAILABLE_LOCALES = {
+    'zh-HK': { locale: 'zh-HK', title: '', subTitle: '', description: '' },
+    'en-GB': { locale: 'en-GB', title: '', subTitle: '', description: '' },
+    'ms-MY': { locale: 'ms-MY', title: '', subTitle: '', description: '' },
+    'zh-CN': { locale: 'zh-CN', title: '', subTitle: '', description: '' },
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [dialogTarget, setDialogTarget] = useState<'title' | 'subTitle'>('title');
+    const [titleTranslationDialogOpen, setTitleTranslationDialogOpen] = useState(false);
+
+    const [translations, setTranslations] = useState<{ [key: string]: TranslationObject }>({
+        ...AVAILABLE_LOCALES,
+    });
+
+    const handleMainChange = (field: 'title' | 'subTitle' | 'description', value: string) => {
+        setTranslations((prev) => ({
+            ...prev,
+            'zh-HK': {
+                ...prev['zh-HK'],
+                [field]: value,
+            },
+        }));
+    };
+
+    const handleEditTitleDialog = (dialogTarget: 'title' | 'subTitle') => {
+        setDialogTarget(dialogTarget);
+        setTitleTranslationDialogOpen(true);
+    };
+
+    const handleDialogClose = (
+        updatedValues: { [key: string]: string },
+        dialogTarget: 'title' | 'subTitle' | 'description',
+    ) => {
+        switch (dialogTarget) {
+            case 'title':
+                setTitleTranslationDialogOpen(false);
+                break;
+            case 'subTitle':
+                setTitleTranslationDialogOpen(false);
+                break;
+        }
+        setTranslations((prev) => {
+            const updatedTranslations = { ...prev };
+            Object.keys(updatedValues).forEach((locale) => {
+                updatedTranslations[locale] = {
+                    ...prev[locale],
+                    [dialogTarget]: updatedValues[locale],
+                };
+            });
+            return updatedTranslations;
+        });
+    };
+
 
   return (
-    <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+          <TextField
+              label="禮品標題"
+              value={translations['zh-HK'].title}
+              onChange={(e) => handleMainChange('title', e.target.value)}
+              fullWidth
+              margin="normal"
+              InputProps={{
+                  endAdornment: (
+                      <InputAdornment position="end">
+                          <Button variant="outlined" onClick={() => handleEditTitleDialog('title')}>
+                              其他語言
+                          </Button>
+                      </InputAdornment>
+                  ),
+              }}
+          />
+          <TextField
+              label="禮品副標題"
+              value={translations['zh-HK'].subTitle}
+              onChange={(e) => handleMainChange('subTitle', e.target.value)}
+              fullWidth
+              margin="normal"
+              InputProps={{
+                  endAdornment: (
+                      <InputAdornment position="end">
+                          <Button variant="outlined" onClick={() => handleEditTitleDialog('subTitle')}>
+                              其他語言
+                          </Button>
+                      </InputAdornment>
+                  ),
+              }}
+          />
+          <Button onClick={() => console.log(translations)}>Log translations</Button>
+          <TitleTranslationDialog
+              open={titleTranslationDialogOpen}
+              onClose={(updatedValues, dialogTarget) => handleDialogClose(updatedValues, dialogTarget)}
+              dialogTarget={dialogTarget}
+              defaultValue={translations['zh-HK'][dialogTarget]}
+              existingTranslations={translations}
+          />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
   )
 }
 
